@@ -68,7 +68,7 @@ Sonifi Solutions
 				setprodparents.add(a.name);
 
 				mpsitetoid.put(a.account.site_id__c,a.accountid);
-				system.debug('mpsitetoid size is ' +mpsitetoid);
+				//system.debug('mpsitetoid size is ' +mpsitetoid);
 
 				if(mpsitetoasset.containskey(a.account.site_id__c))
 				{ mpsitetoasset.get(a.account.Site_ID__c).add(a); }
@@ -261,6 +261,7 @@ Sonifi Solutions
 	public static void CreateCaseTasks(Map<Id,case> mpnotes)
 	{
 		//TODO Get more information about what should be populated into the Task
+		system.debug('**********BEGIN CreateCaseTasks*********');
 
 		List<Task> lstinsert = New List<Task>();
 		if(Schema.sObjectType.Case.Fields.Notes__c.isAccessible())
@@ -277,13 +278,14 @@ Sonifi Solutions
 				t.WhatId = key;
 				t.description = newcase.notes__c;
 				t.recordtypeid = suppcasetype;
-				t.Subject = newcase.Subject;
+				t.Subject = newcase.Subject +' - ' +system.Now();
 				t.Status = 'Completed';
 				t.Case_Product_Type__c = newcase.Case_Product_Type__c;
 				t.Issue_Type__c = newcase.Issue_Type__c;
 				t.Issue_Sub_Type__c = newcase.Issue_Sub_Type__c;
 				t.Case_Status__c = newcase.status;
 				t.Task_Customer_Name__c = newcase.Customer_Name__c;
+				t.Task_Origin__c = 'CallTek';
 				lstinsert.add(t);
 
 			}
@@ -297,6 +299,8 @@ Sonifi Solutions
 				system.debug('ERROR creating calltek case task: ' +e.getMessage());
 			}
 		}
+
+		system.debug('*********END CreateCaseTasks**********');
 	}
 }
 

@@ -70,12 +70,23 @@ trigger StandardCaseTriggerForContractedFieldService on Case (after insert, afte
 	if(trigger.isUpdate)
 	{
 		//jjackson  Get contract field service cases in a list
+		//jjackson 6/2024 get cases with CallTek origin in a map
 		List<Case> lstcontractedfieldservice = New List<Case>();
+		Map<Id,Case> mpcalltekcase = New Map<Id,Case>();
 		for(Case c :trigger.new)
 		{
 			if(c.recordtypeid == recid)
 			{  lstcontractedfieldservice.add(c); }
+
+			if(c.Origin == 'CallTek' && c.Notes__c != null && c.Notes__c != trigger.oldMap.get(c.id).Notes__c)
+			{ mpcalltekcase.put(c.id,c); }
 		}
+
+		if(mpcalltekcase.size() > 0)
+		{  CaseTriggerLogicCallTekCases.CreateCaseTasks(mpcalltekcase);  }
+		
+		if(lstcontractedfieldservice.size() > 0)
+		{ CaseTriggerLogic.PopulateSpecialInstructions(lstcontractedfieldservice); }
 
 		if(test.isRunningTest())
 		{
