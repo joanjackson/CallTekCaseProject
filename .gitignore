@@ -43,3 +43,6 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+CallTekCaseInfo.txt
+scripts/apex/createcase.apex
+scripts/apex/createcase.apex
